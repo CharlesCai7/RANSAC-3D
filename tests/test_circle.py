@@ -38,3 +38,4 @@ mesh_circle.paint_uniform_color([0.9, 0.1, 0.1])
 mesh_circle = mesh_circle.rotate(R, center=[0, 0, 0])
 mesh_circle = mesh_circle.translate((center[0], center[1], center[2]))
 o3d.visualization.draw_geometries([mesh_circle, pcd_load, inline])
+

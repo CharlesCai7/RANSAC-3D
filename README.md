@@ -1,20 +1,36 @@
+#### Getting Start for Fab+LLM Proj
+``` bash
+python -m venv ransacEnv
+source ransacEnv/bin/activate
+```
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/leomariga/pyRANSAC-3D/master/doc/logo.png"><br>
-</div>
+``` bash
+pip install -r requirements-dev.txt
+pip install -r requirements.txt
+python setup.py develop
+```
 
------------------
-[![DOI](https://zenodo.org/badge/287829485.svg)](https://zenodo.org/badge/latestdoi/287829485)
-[![PyPI Latest Release](https://img.shields.io/pypi/v/pyransac3d.svg)](https://pypi.org/project/pyransac3d/)
-[![License](https://img.shields.io/pypi/l/pyransac3d.svg)](https://github.com/leomariga/pyransac3d/blob/master/LICENSE)
+#### Code Structure for Fab+LLM Proj
+``` bash
+RANSAC-3D
+├── assets
+│   ├── mesh_models
+│   ├── models_ply
+├── pyransac3d
+│   ├── __init__.py
+│   ├── plane.py
+│   ├── cylinder.py
+│   ├── cuboid.py
+│   ├── sphere.py
+│   ├── line.py
+│   ├── circle.py
+├── tests (example testing code)
+```
 
 
-## What is pyRANSAC-3D?
-**_pyRANSAC-3D_** is an open source implementation of Random sample consensus (RANSAC) method. It fits primitive shapes such as planes, cuboids and cylinder in a point cloud to many aplications: 3D slam, 3D reconstruction, object tracking and many others. 
+#### Note for Fab+LLM Proj
+Search for the 'potential frontend' in the code to see where to add the frontend code POTENTIALLY.
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/leomariga/pyRANSAC-3D/master/doc/plano.gif"><br>
-</div>
 
 #### Features:
  - [Plane](https://leomariga.github.io/pyRANSAC-3D/api-documentation/plane/)
@@ -26,14 +42,7 @@
  - [Point](https://leomariga.github.io/pyRANSAC-3D/api-documentation/point/)
 
 
-## Installation
-Requirements: Numpy
 
-Install with [Pypi](https://pypi.org/project/pyransac3d/):
-
-```sh
-pip3 install pyransac3d
-```
 
 ## Take a look: 
 
@@ -109,9 +118,4 @@ See [CONTRIBUTING](https://github.com/leomariga/pyRANSAC-3D/blob/master/CONTRIBU
 
 ## Contact
 
-Developed with :heart: by the internet
 
-
-Mainteiner: [Leonardo Mariga](https://github.com/leomariga) 
-
-Did you like it? Remember to click on :star2: button.

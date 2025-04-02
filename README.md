@@ -10,9 +10,14 @@ pip install -r requirements.txt
 python setup.py develop
 ```
 
+``` bash
+python ply2shape.py
+```
+
 #### Code Structure for Fab+LLM Proj
 ``` bash
 RANSAC-3D
+├── setup.py (setup the python package)
 ├── assets
 │   ├── mesh_models
 │   ├── models_ply
@@ -25,6 +30,11 @@ RANSAC-3D
 │   ├── line.py
 │   ├── circle.py
 ├── tests (example testing code)
+├── config.py (define mesh based model to process and the RANSAC parameters)
+├── mesh2ply.py & ply2shape.py (mesh models -> pointcloud files -> shape info returned)
+├── recoder.py (reverse engineering the mesh models into cadquery code with recoder)
+├── iou.py (intersection over union, to calculate the accuracy of the resulted model by recoder)
+├── main.py (run the recoder.py first, then determine if we should use the model directly with IoU)
 ```
 
 
@@ -34,7 +44,7 @@ Search for the 'potential frontend' in the code to see where to add the frontend
 
 #### Features:
  - [Plane](https://leomariga.github.io/pyRANSAC-3D/api-documentation/plane/)
- - [Cylinder](https://leomariga.github.io/pyRANSAC-3D/api-documentation/cylinder/)
+ - [Cylinder (rebuilt)](https://leomariga.github.io/pyRANSAC-3D/api-documentation/cylinder/)
  - [Cuboid](https://leomariga.github.io/pyRANSAC-3D/api-documentation/cuboid/)
  - [Sphere](https://leomariga.github.io/pyRANSAC-3D/api-documentation/sphere/)
  - [Line](https://leomariga.github.io/pyRANSAC-3D/api-documentation/line/)
@@ -42,61 +52,9 @@ Search for the 'potential frontend' in the code to see where to add the frontend
  - [Point](https://leomariga.github.io/pyRANSAC-3D/api-documentation/point/)
 
 
-
-
-## Take a look: 
-
-### Example 1 - Planar RANSAC
-
-``` python
-import pyransac3d as pyrsc
-
-points = load_points(.) # Load your point cloud as a numpy array (N, 3)
-
-plane1 = pyrsc.Plane()
-best_eq, best_inliers = plane1.fit(points, 0.01)
-
-```
-
-Results in the plane equation Ax+By+Cz+D:
-`[0.720, -0.253, 0.646, 1.100]`
-
-### Example 2 - Spherical RANSAC
-
-Loading a noisy sphere's point cloud with r = 5 centered in 0 we can use the following code:
-
-``` python
-import pyransac3d as pyrsc
-
-points = load_points(.) # Load your point cloud as a numpy array (N, 3)
-
-sph = pyrsc.Sphere()
-center, radius, inliers = sph.fit(points, thresh=0.4)
-
-```
-
-Results:
-``` python
-center: [0.010462385575072288, -0.2855090643954039, 0.02867848979091283]
-radius: 5.085218633039647
-```
-
-![3D Sphere](https://raw.githubusercontent.com/leomariga/pyRANSAC-3D/master/doc/sphere.gif "3D Sphere")
-
-
-## Documentation & other links
- - The [documentation is this Ṕage](https://leomariga.github.io/pyRANSAC-3D/).
- - Source code in the [Github repository](https://github.com/leomariga/pyRANSAC-3D).
- - [Pypi pakage installer](https://pypi.org/project/pyransac3d/)
- - You can find the animations you see in the documentation on branch [Animations](https://github.com/leomariga/pyRANSAC-3D/tree/Animations). It needs [Open3D](https://github.com/intel-isl/Open3D) library to run. The Animation branch is not regularly maintained, it only exists to create some cool visualizations ;D 
-
-
-## License
-[Apache 2.0](https://github.com/leomariga/pyRANSAC-3D/blob/master/LICENSE)
-
 ## Citation
-Did this repository was useful for your work? =)
 
+1. pyRANSAC package (update the cylinder model):
 ```
 @software{Mariga_pyRANSAC-3D_2022,
   author = {Mariga, Leonardo},
@@ -108,14 +66,16 @@ Did this repository was useful for your work? =)
   year = {2022}
 }
 ```
-
-## Contributing is awesome!
-
-See [CONTRIBUTING](https://github.com/leomariga/pyRANSAC-3D/blob/master/CONTRIBUTING.md)
-
-
-
-
-## Contact
-
+2. CAD-Recode: Reverse Engineering CAD Code from Point Clouds
+```
+@misc{rukhovich2025cadrecodereverseengineeringcad,
+      title={CAD-Recode: Reverse Engineering CAD Code from Point Clouds}, 
+      author={Danila Rukhovich and Elona Dupont and Dimitrios Mallis and Kseniya Cherenkova and Anis Kacem and Djamila Aouada},
+      year={2025},
+      eprint={2412.14042},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2412.14042}, 
+}
+```
 

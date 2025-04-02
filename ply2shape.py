@@ -8,36 +8,42 @@ import copy
 
 
 def process_pointcloud():
-    # Ensure the point cloud is generated
     mesh2ply.generate_pointcloud()
 
     print(f"Loading point cloud from: {config.OUTPUT_POINTCLOUD}")
 
     try:
-        # Load the point cloud
         pcd = o3d.io.read_point_cloud(config.OUTPUT_POINTCLOUD)
+
+        # (potential frontend) text output
         print(f"Loaded point cloud with {len(pcd.points)} points")
 
-        # (potential frontend) Visualize the point cloud
+        # (potential frontend) visualization
         # o3d.visualization.draw_geometries([pcd])
 
     except Exception as e:
+
+        # (potential frontend) text output
         print("Error loading point cloud:", e)
 
     return pcd
 
 
 def dbscan_clustering(pcd):
-    # Convert the point cloud to a numpy array
     points = np.asarray(pcd.points)
     # DBSCAN clustering
     with o3d.utility.VerbosityContextManager(o3d.utility.VerbosityLevel.Debug) as cm:
         labels = np.array(pcd.cluster_dbscan(eps=0.05, min_points=5, print_progress=True))
     max_label = labels.max()
+
+    # (potential frontend) text output
     print(f"point cloud has {max_label + 1} clusters")
+
     colors = plt.get_cmap("tab10")(labels / (max_label if max_label > 0 else 1))
     colors[labels < 0] = 0
     pcd.colors = o3d.utility.Vector3dVector(colors[:, :3])
+
+    # (potential frontend) visualization
     o3d.visualization.draw_geometries([pcd])
 
 
@@ -57,6 +63,7 @@ def detect_circle(pcd):
         while radius < 0.1 or radius > 100:
             center, normal, radius, inliers = cir.fit(points, thresh=0.5)
 
+        # (potential frontend) text output
         print(f"\n This model has a circle based primitive, with the center at " + str(center) +
               ", radius " + str(radius) + " and normal vector " + str(normal) + "\n")
         
@@ -76,6 +83,8 @@ def detect_circle(pcd):
         segments[i] = mesh_circle
    
     segments[max_circle_num] = pcd
+
+    # (potential frontend) visualization
     o3d.visualization.draw_geometries(list(segments.values()))
 
 def detect_plane(pcd):
@@ -93,7 +102,11 @@ def detect_plane(pcd):
         segments[i] = rest.select_by_index(inliers)
         segments[i].paint_uniform_color(colors[:3])
         rest = rest.select_by_index(inliers, invert=True)
+
+        # (potential frontend) text output
         print(f"Plane {i} equation: {plane_model}")
+
+    # (potential frontend) visualization
     o3d.visualization.draw_geometries(list(segments.values()))
 
 
@@ -102,9 +115,12 @@ def detect_cylinder(pcd):
     points = np.asarray(pcd.points)
     cil = pyrsc.Cylinder()
     center, normal, radius, inliers = cil.fit(points, thresh=0.05)
+
+    # (potential frontend) text output
     print("center: " + str(center))
     print("radius: " + str(radius))
     print("vecC: " + str(normal))
+
     R = pyrsc.get_rotationMatrix_from_vectors([0, 0, 1], normal)
 
     plane = pcd.select_by_index(inliers).paint_uniform_color([1, 0, 0])
@@ -124,6 +140,7 @@ def detect_cylinder(pcd):
 
     # remove the points that are not part of the cylinder
     pcd = pcd.select_by_index(inliers)
+    # (potential frontend) visualization
     o3d.visualization.draw_geometries([pcd])
 
 def detect_primitives():
